@@ -25,10 +25,52 @@ const navItems: Record<string, NavItem[]> = {
     { href: "/admin/hisobotlar",        label: "Hisobotlar",     icon: <IconChart /> },
     { href: "/xarita",                  label: "Xarita",         icon: <IconMap /> },
   ],
+  HOKIM: [
+    { href: "/hokim",                        label: "Dashboard",       icon: <IconDash />,      exact: true },
+    { href: "/investitsiya/obyektlar",       label: "Obyektlar",       icon: <IconBuilding /> },
+    { href: "/investitsiya/muammolar",       label: "Muammolar",       icon: <IconAlert /> },
+    { href: "/investitsiya/hujjatlar",       label: "Hujjatlar",       icon: <IconFolder /> },
+    { href: "/superadmin/userlar",           label: "Foydalanuvchilar",icon: <IconPeople /> },
+    { href: "/superadmin/hisobotlar",        label: "Hisobotlar",      icon: <IconChart /> },
+  ],
+  INVESTITSIYA: [
+    { href: "/admin",                              label: "Dashboard",        icon: <IconDash />,      exact: true },
+    { href: "/investitsiya/obyektlar",             label: "Obyektlar",        icon: <IconBuilding /> },
+    { href: "/investitsiya/muammolar",             label: "Muammolar",        icon: <IconAlert /> },
+    { href: "/investitsiya/hujjatlar",             label: "Hujjatlar",        icon: <IconFolder /> },
+    { href: "/investitsiya/foydalanuvchilar",      label: "Foydalanuvchilar", icon: <IconPeople /> },
+  ],
+  QURILISH: [
+    { href: "/qurilish",                     label: "Dashboard",    icon: <IconDash />,     exact: true },
+    { href: "/qurilish/obyektlar",           label: "Obyektlar",    icon: <IconBuilding /> },
+    { href: "/investitsiya/muammolar",       label: "Muammolar",    icon: <IconAlert /> },
+    { href: "/investitsiya/hujjatlar",       label: "Hujjatlar",    icon: <IconFolder /> },
+    { href: "/admin/hisobotlar",             label: "Hisobotlar",   icon: <IconChart /> },
+    { href: "/qurilish/foydalanuvchilar",    label: "Foydalanuvchilar", icon: <IconPeople /> },
+  ],
+  TADBIRKOR: [
+    { href: "/user",                    label: "Bosh sahifa",    icon: <IconDash />,    exact: true },
+    { href: "/user/momo-yuborish",      label: "Momo yuborish",  icon: <IconSend /> },
+    { href: "/user/mening-momolarim",   label: "Momolarim",      icon: <IconList /> },
+    { href: "/user/hisobotlar",         label: "Hisobotlar",     icon: <IconChart /> },
+    { href: "/xarita",                  label: "Xarita",         icon: <IconMap /> },
+  ],
   tashkilot: [
     { href: "/tashkilot",              label: "Dashboard",       icon: <IconDash />,    exact: true },
     { href: "/tashkilot/momolar",      label: "Momolar",         icon: <IconAlert />,   badge: "5" },
     { href: "/tashkilot/statistika",   label: "Statistika",      icon: <IconChart /> },
+  ],
+  TASHKILOT: [
+    { href: "/tashkilot",              label: "Dashboard",       icon: <IconDash />,    exact: true },
+    { href: "/tashkilot/momolar",      label: "Momolar",         icon: <IconAlert />,   badge: "5" },
+    { href: "/tashkilot/statistika",   label: "Statistika",      icon: <IconChart /> },
+  ],
+  tadbirkor: [
+    { href: "/user",                    label: "Bosh sahifa",    icon: <IconDash />,    exact: true },
+    { href: "/user/momo-yuborish",      label: "Momo yuborish",  icon: <IconSend /> },
+    { href: "/user/mening-momolarim",   label: "Momolarim",      icon: <IconList /> },
+    { href: "/user/hisobotlar",         label: "Hisobotlar",     icon: <IconChart /> },
+    { href: "/xarita",                  label: "Xarita",         icon: <IconMap /> },
   ],
   user: [
     { href: "/user",                    label: "Bosh sahifa",    icon: <IconDash />,    exact: true },
@@ -40,10 +82,22 @@ const navItems: Record<string, NavItem[]> = {
 };
 
 const roleConfig: Record<string, { label: string; color: string; dot: string }> = {
-  superadmin: { label: "Superadmin",    color: "#f43f5e", dot: "#f43f5e" },
-  admin:      { label: "Admin",         color: "#3b82f6", dot: "#3b82f6" },
-  tashkilot:  { label: "Tashkilot",     color: "#10b981", dot: "#10b981" },
-  user:       { label: "Foydalanuvchi", color: "#f59e0b", dot: "#f59e0b" },
+  superadmin:   { label: "Superadmin",    color: "#f43f5e", dot: "#f43f5e" },
+  SUPERADMIN:   { label: "Superadmin",    color: "#f43f5e", dot: "#f43f5e" },
+  admin:        { label: "Admin",         color: "#3b82f6", dot: "#3b82f6" },
+  ADMIN:        { label: "Admin",         color: "#3b82f6", dot: "#3b82f6" },
+  HOKIM:        { label: "Hokim",         color: "#f43f5e", dot: "#f43f5e" },
+  hokim:        { label: "Hokim",         color: "#f43f5e", dot: "#f43f5e" },
+  INVESTITSIYA: { label: "Investitsiya",  color: "#3b82f6", dot: "#3b82f6" },
+  investitsiya: { label: "Investitsiya",  color: "#3b82f6", dot: "#3b82f6" },
+  QURILISH:     { label: "Qurilish",      color: "#8b5cf6", dot: "#8b5cf6" },
+  qurilish:     { label: "Qurilish",      color: "#8b5cf6", dot: "#8b5cf6" },
+  tashkilot:    { label: "Tashkilot",     color: "#10b981", dot: "#10b981" },
+  TASHKILOT:    { label: "Tashkilot",     color: "#10b981", dot: "#10b981" },
+  TADBIRKOR:    { label: "Tadbirkor",     color: "#f59e0b", dot: "#f59e0b" },
+  tadbirkor:    { label: "Tadbirkor",     color: "#f59e0b", dot: "#f59e0b" },
+  user:         { label: "Foydalanuvchi", color: "#f59e0b", dot: "#f59e0b" },
+  USER:         { label: "Foydalanuvchi", color: "#f59e0b", dot: "#f59e0b" },
 };
 
 export default function Sidebar() {
@@ -266,3 +320,5 @@ function IconSend()     { return <svg width="15" height="15" viewBox="0 0 24 24"
 function IconList()     { return <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg> }
 function IconSun()      { return <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg> }
 function IconMoon()     { return <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg> }
+
+function IconFolder()   { return <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> }

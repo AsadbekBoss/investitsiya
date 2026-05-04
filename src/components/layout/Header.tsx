@@ -24,11 +24,11 @@ export default function Header() {
   return (
     <>
       {(profileOpen || notifOpen) && (
-        <div className="fixed inset-0 z-20" onClick={() => { setProfileOpen(false); setNotifOpen(false); }} />
+        <div className="fixed inset-0 z-[1090]" onClick={() => { setProfileOpen(false); setNotifOpen(false); }} />
       )}
 
       <header className={cn(
-        "fixed top-0 right-0 z-30 h-[60px] flex items-center justify-between px-5 transition-all duration-300",
+        "fixed top-0 right-0 z-[1100] h-[60px] flex items-center justify-between px-5 transition-all duration-300",
         sidebarOpen ? "left-[268px]" : "left-[72px]"
       )} style={{
         background: lightMode ? "rgba(255,255,255,0.95)" : "rgba(13,21,40,0.85)",

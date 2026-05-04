@@ -2,6 +2,7 @@ import axios from "axios";
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api",
+  withCredentials: false,
   headers: {
     "Content-Type": "application/json",
   },
@@ -17,12 +18,14 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Response interceptor — 401 bo'lsa logout
+// Response interceptor — 401 kelsa faqat login sahifasida bo'lmasa redirect
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
-      if (typeof window !== "undefined") {
+    const status: number | undefined = error.response?.status;
+    if ((status === 401 || status === 403) && typeof window !== "undefined") {
+      const isLoginPage = window.location.pathname === "/login";
+      if (!isLoginPage) {
         localStorage.removeItem("token");
         window.location.href = "/login";
       }

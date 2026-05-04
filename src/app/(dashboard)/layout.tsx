@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { sidebarOpen, lightMode } = useUiStore();
   return (
-    <div className={`min-h-screen${lightMode ? " light-mode" : ""}`}
+    <div className={`min-h-screen${lightMode ? " light-mode" : " dark-mode"}`}
       style={{ background: lightMode ? "#f0f4ff" : "#0a0f1e", transition:"background 0.3s ease" }}>
       <Sidebar />
       <Header />

@@ -1,221 +1,230 @@
 "use client";
-import { useState } from "react";
-import { useAuthStore } from "@/store/authStore";
+import { useState, useEffect } from "react";
+import { getMe } from "@/services/authService";
+import type { MeProfile } from "@/services/authService";
+import { useAuth } from "@/hooks/useAuth";
 
-const ROLE_LABELS: Record<string, string> = {
-  superadmin: "Superadmin",
-  admin:      "Admin",
-  tashkilot:  "Tashkilot",
-  user:       "Foydalanuvchi",
+const ROLE_CFG: Record<string, { label: string; color: string }> = {
+  SUPERADMIN:   { label: "Superadmin",    color: "#f43f5e" },
+  superadmin:   { label: "Superadmin",    color: "#f43f5e" },
+  ADMIN:        { label: "Admin",         color: "#3b82f6" },
+  admin:        { label: "Admin",         color: "#3b82f6" },
+  HOKIM:        { label: "Hokim",         color: "#f43f5e" },
+  INVESTITSIYA: { label: "Investitsiya",  color: "#3b82f6" },
+  QURILISH:     { label: "Qurilish",      color: "#8b5cf6" },
+  TASHKILOT:    { label: "Tashkilot",     color: "#10b981" },
+  TADBIRKOR:    { label: "Tadbirkor",     color: "#f59e0b" },
+  USER:         { label: "Foydalanuvchi", color: "#f59e0b" },
 };
-const ROLE_COLORS: Record<string, string> = {
-  superadmin: "#f43f5e",
-  admin:      "#3b82f6",
-  tashkilot:  "#10b981",
-  user:       "#f59e0b",
-};
+const rc = (r: string) => ROLE_CFG[r] ?? { label: r, color: "#64748b" };
 
 export default function ProfilPage() {
-  const { user } = useAuthStore();
-  const dot = ROLE_COLORS[user?.role || "user"];
+  const { logout } = useAuth();
+  const [profile,  setProfile]  = useState<MeProfile | null>(null);
+  const [loading,  setLoading]  = useState(true);
+  const [error,    setError]    = useState("");
 
-  const [ism,       setIsm]       = useState(user?.ism || "");
-  const [email,     setEmail]     = useState(user?.email || "");
-  const [tel,       setTel]       = useState("+998 90 000 00 00");
-  const [parol,     setParol]     = useState("");
-  const [parol2,    setParol2]    = useState("");
-  const [showP,     setShowP]     = useState(false);
-  const [showP2,    setShowP2]    = useState(false);
-  const [saved,     setSaved]     = useState(false);
-  const [pwdSaved,  setPwdSaved]  = useState(false);
-  const [pwdError,  setPwdError]  = useState("");
+  useEffect(() => {
+    getMe()
+      .then(setProfile)
+      .catch(() => setError("Ma'lumotlarni yuklashda xato"))
+      .finally(() => setLoading(false));
+  }, []);
 
-  const handleSaveInfo = () => {
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
-  };
+  const role = profile ? rc(profile.role) : { label: "—", color: "#64748b" };
+  const initials = profile?.fullName
+    ?.split(" ")
+    .map(w => w[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2) ?? "?";
 
-  const handleSavePwd = () => {
-    if (!parol) { setPwdError("Parol kiritilmadi"); return; }
-    if (parol.length < 6) { setPwdError("Kamida 6 ta belgi bo'lishi kerak"); return; }
-    if (parol !== parol2) { setPwdError("Parollar mos kelmadi"); return; }
-    setPwdError("");
-    setParol(""); setParol2("");
-    setPwdSaved(true);
-    setTimeout(() => setPwdSaved(false), 2000);
-  };
+  if (loading) {
+    return (
+      <div className="-m-6 flex items-center justify-center"
+        style={{ minHeight: "calc(100vh - 60px)", background: "#080d1a" }}>
+        <div className="w-10 h-10 border-2 rounded-full animate-spin"
+          style={{ borderColor: "rgba(59,130,246,0.2)", borderTopColor: "#3b82f6" }} />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="-m-6 flex items-center justify-center"
+        style={{ minHeight: "calc(100vh - 60px)", background: "#080d1a" }}>
+        <p className="text-sm" style={{ color: "#f87171" }}>{error}</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="max-w-2xl space-y-5">
-      {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight" style={{ color:"rgba(220,235,255,0.95)" }}>Profil</h1>
-        <p className="text-sm mt-1" style={{ color:"rgba(120,150,200,0.55)" }}>Shaxsiy ma'lumotlar va hisob sozlamalari</p>
+    <div className="-m-6 flex flex-col" style={{ minHeight: "calc(100vh - 60px)", background: "#080d1a" }}>
+
+      {/* Page header */}
+      <div className="px-6 pt-6 pb-4 flex-shrink-0">
+        <span className="inline-block text-[10px] font-bold tracking-widest px-2.5 py-1 rounded-lg mb-2"
+          style={{ background: "rgba(59,130,246,0.18)", border: "1px solid rgba(59,130,246,0.3)", color: "#60a5fa" }}>
+          PROFIL
+        </span>
+        <h1 className="text-xl font-bold" style={{ color: "rgba(220,235,255,0.97)" }}>Mening profilim</h1>
+        <p className="text-xs mt-0.5" style={{ color: "rgba(100,130,200,0.55)" }}>
+          Hisob ma&apos;lumotlari — /auth/me
+        </p>
       </div>
 
-      {/* Avatar card */}
-      <div className="p-6 rounded-2xl flex items-center gap-5"
-        style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.08)" }}>
-        <div className="w-20 h-20 rounded-2xl flex items-center justify-center text-3xl font-bold flex-shrink-0"
-          style={{ background:`${dot}20`, border:`2px solid ${dot}50`, boxShadow:`0 0 28px ${dot}30`, color:dot }}>
-          {user?.ism?.[0]?.toUpperCase() || "?"}
-        </div>
-        <div className="flex-1">
-          <h2 className="text-xl font-bold mb-1" style={{ color:"rgba(210,225,255,0.95)" }}>{user?.ism}</h2>
-          <p className="text-sm mb-2" style={{ color:"rgba(120,150,200,0.6)" }}>{user?.email}</p>
-          <span className="text-xs font-bold px-3 py-1 rounded-full"
-            style={{ background:`${dot}18`, color:dot, border:`1px solid ${dot}35` }}>
-            {ROLE_LABELS[user?.role || "user"]}
-          </span>
-        </div>
-        <div className="hidden sm:block text-right">
-          <p className="text-xs mb-1" style={{ color:"rgba(100,130,200,0.45)" }}>ID</p>
-          <p className="text-sm font-mono font-semibold" style={{ color:"rgba(150,180,230,0.65)" }}>
-            #{user?.id?.slice?.(0,8) || "—"}
-          </p>
-        </div>
-      </div>
+      <div className="px-6 pb-6 space-y-4 flex-1">
 
-      {/* Ma'lumotlar */}
-      <div className="p-5 rounded-2xl space-y-4"
-        style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.08)" }}>
-        <p className="text-sm font-bold" style={{ color:"rgba(150,180,230,0.75)" }}>👤 Shaxsiy ma'lumotlar</p>
+        {/* Avatar banner */}
+        <div className="rounded-2xl p-6 flex items-center gap-5 relative overflow-hidden"
+          style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)" }}>
+          <div className="absolute inset-0 pointer-events-none"
+            style={{ background: `radial-gradient(ellipse 60% 80% at 0% 50%, ${role.color}12 0%, transparent 70%)` }} />
 
+          {/* Avatar */}
+          <div className="relative flex-shrink-0">
+            <div className="w-20 h-20 rounded-2xl flex items-center justify-center text-2xl font-bold z-10 relative"
+              style={{
+                background: `${role.color}20`,
+                border: `2px solid ${role.color}50`,
+                boxShadow: `0 0 28px ${role.color}25`,
+                color: role.color,
+              }}>
+              {initials}
+            </div>
+            <span className="absolute -bottom-1.5 -right-1.5 w-5 h-5 rounded-full border-2 flex items-center justify-center z-20"
+              style={{ background: "#10b981", borderColor: "#080d1a" }}>
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3.5">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+            </span>
+          </div>
+
+          {/* Name & meta */}
+          <div className="flex-1 min-w-0 z-10">
+            <h2 className="text-xl font-bold truncate" style={{ color: "rgba(220,235,255,0.97)" }}>
+              {profile?.fullName}
+            </h2>
+            <p className="text-sm mt-0.5 font-mono" style={{ color: "rgba(120,150,200,0.55)" }}>
+              @{profile?.username}
+            </p>
+            <div className="mt-3 flex items-center gap-2 flex-wrap">
+              <span className="px-3 py-1 rounded-xl text-xs font-bold"
+                style={{ background: `${role.color}20`, border: `1px solid ${role.color}40`, color: role.color }}>
+                {role.label}
+              </span>
+              <span className="px-3 py-1 rounded-xl text-xs font-medium"
+                style={{ background: "rgba(16,185,129,0.12)", border: "1px solid rgba(16,185,129,0.25)", color: "#10b981" }}>
+                Faol
+              </span>
+            </div>
+          </div>
+
+          {/* ID */}
+          <div className="flex-shrink-0 text-right z-10">
+            <p className="text-[10px] font-bold tracking-widest mb-1" style={{ color: "rgba(100,130,200,0.4)" }}>ID</p>
+            <p className="text-3xl font-bold font-mono" style={{ color: `${role.color}60` }}>
+              #{profile?.id}
+            </p>
+          </div>
+        </div>
+
+        {/* Info grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label className="text-xs font-semibold mb-1.5 block" style={{ color:"rgba(120,150,200,0.55)" }}>To'liq ism</label>
-            <input value={ism} onChange={e=>setIsm(e.target.value)}
-              className="w-full text-sm px-3.5 py-2.5 rounded-xl outline-none"
-              style={{ background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.1)", color:"rgba(210,225,255,0.9)" }}
-              onFocus={e=>{e.target.style.borderColor="rgba(59,130,246,0.5)";e.target.style.boxShadow="0 0 0 3px rgba(59,130,246,0.08)";}}
-              onBlur={e=>{e.target.style.borderColor="rgba(255,255,255,0.1)";e.target.style.boxShadow="none";}}
-            />
-          </div>
-          <div>
-            <label className="text-xs font-semibold mb-1.5 block" style={{ color:"rgba(120,150,200,0.55)" }}>Telefon</label>
-            <input value={tel} onChange={e=>setTel(e.target.value)}
-              className="w-full text-sm px-3.5 py-2.5 rounded-xl outline-none"
-              style={{ background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.1)", color:"rgba(210,225,255,0.9)" }}
-              onFocus={e=>{e.target.style.borderColor="rgba(59,130,246,0.5)";e.target.style.boxShadow="0 0 0 3px rgba(59,130,246,0.08)";}}
-              onBlur={e=>{e.target.style.borderColor="rgba(255,255,255,0.1)";e.target.style.boxShadow="none";}}
-            />
-          </div>
-          <div className="sm:col-span-2">
-            <label className="text-xs font-semibold mb-1.5 block" style={{ color:"rgba(120,150,200,0.55)" }}>Email</label>
-            <input value={email} onChange={e=>setEmail(e.target.value)}
-              className="w-full text-sm px-3.5 py-2.5 rounded-xl outline-none"
-              style={{ background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.1)", color:"rgba(210,225,255,0.9)" }}
-              onFocus={e=>{e.target.style.borderColor="rgba(59,130,246,0.5)";e.target.style.boxShadow="0 0 0 3px rgba(59,130,246,0.08)";}}
-              onBlur={e=>{e.target.style.borderColor="rgba(255,255,255,0.1)";e.target.style.boxShadow="none";}}
-            />
-          </div>
+          <InfoRow
+            icon="person"
+            label="To'liq ism"
+            value={profile?.fullName ?? "—"}
+            color="#3b82f6"
+          />
+          <InfoRow
+            icon="phone"
+            label="Telefon"
+            value={profile?.phone ?? "—"}
+            color="#10b981"
+          />
+          <InfoRow
+            icon="user"
+            label="Username"
+            value={`@${profile?.username}`}
+            color="#8b5cf6"
+          />
+          <InfoRow
+            icon="shield"
+            label="Rol"
+            value={role.label}
+            color={role.color}
+          />
+          <InfoRow
+            icon="building"
+            label="Bo'lim"
+            value={profile?.department ?? "Belgilanmagan"}
+            color="#f59e0b"
+            muted={!profile?.department}
+          />
+          <InfoRow
+            icon="tag"
+            label="Tashkilot turi"
+            value={profile?.organizationType ?? "Belgilanmagan"}
+            color="#06b6d4"
+            muted={!profile?.organizationType}
+          />
         </div>
 
-        <button onClick={handleSaveInfo}
-          className="px-5 py-2.5 rounded-xl text-sm font-bold transition-all"
-          style={{
-            background: saved ? "rgba(16,185,129,0.2)" : "rgba(59,130,246,0.15)",
-            border: `1px solid ${saved ? "rgba(16,185,129,0.4)" : "rgba(59,130,246,0.35)"}`,
-            color: saved ? "#34d399" : "#60a5fa",
-          }}
-          onMouseEnter={e=>{ if(!saved) e.currentTarget.style.background="rgba(59,130,246,0.25)"; }}
-          onMouseLeave={e=>{ if(!saved) e.currentTarget.style.background="rgba(59,130,246,0.15)"; }}>
-          {saved ? "✓ Saqlandi!" : "💾 Saqlash"}
-        </button>
+        {/* Logout */}
+        <div className="pt-2">
+          <button onClick={logout}
+            className="flex items-center gap-2.5 px-5 py-3 rounded-xl text-sm font-semibold transition-all"
+            style={{ background: "rgba(239,68,68,0.1)", color: "#f87171", border: "1px solid rgba(239,68,68,0.2)" }}
+            onMouseEnter={e => {
+              e.currentTarget.style.background = "rgba(239,68,68,0.2)";
+              e.currentTarget.style.borderColor = "rgba(239,68,68,0.4)";
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.background = "rgba(239,68,68,0.1)";
+              e.currentTarget.style.borderColor = "rgba(239,68,68,0.2)";
+            }}>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+              <polyline points="16 17 21 12 16 7"/>
+              <line x1="21" y1="12" x2="9" y2="12"/>
+            </svg>
+            Tizimdan chiqish
+          </button>
+        </div>
       </div>
+    </div>
+  );
+}
 
-      {/* Parol */}
-      <div className="p-5 rounded-2xl space-y-4"
-        style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.08)" }}>
-        <p className="text-sm font-bold" style={{ color:"rgba(150,180,230,0.75)" }}>🔒 Parolni o'zgartirish</p>
+/* ── InfoRow ── */
+const ICONS: Record<string, React.ReactNode> = {
+  person:   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>,
+  phone:    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.38 2 2 0 0 1 3.58 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6.29 6.29l1.41-1.41a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>,
+  user:     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>,
+  shield:   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>,
+  building: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>,
+  tag:      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>,
+};
 
-        <div className="space-y-3">
-          <div>
-            <label className="text-xs font-semibold mb-1.5 block" style={{ color:"rgba(120,150,200,0.55)" }}>Yangi parol</label>
-            <div className="relative">
-              <input
-                type={showP ? "text" : "password"}
-                value={parol} onChange={e=>setParol(e.target.value)}
-                placeholder="Kamida 6 ta belgi"
-                className="w-full text-sm px-3.5 py-2.5 pr-10 rounded-xl outline-none"
-                style={{ background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.1)", color:"rgba(210,225,255,0.9)" }}
-                onFocus={e=>{e.target.style.borderColor="rgba(59,130,246,0.5)";e.target.style.boxShadow="0 0 0 3px rgba(59,130,246,0.08)";}}
-                onBlur={e=>{e.target.style.borderColor="rgba(255,255,255,0.1)";e.target.style.boxShadow="none";}}
-              />
-              <button type="button" onClick={()=>setShowP(!showP)}
-                className="absolute right-3 top-1/2 -translate-y-1/2"
-                style={{ color:"rgba(120,150,200,0.5)" }}>
-                {showP
-                  ? <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
-                  : <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                }
-              </button>
-            </div>
-          </div>
-
-          <div>
-            <label className="text-xs font-semibold mb-1.5 block" style={{ color:"rgba(120,150,200,0.55)" }}>Parolni tasdiqlang</label>
-            <div className="relative">
-              <input
-                type={showP2 ? "text" : "password"}
-                value={parol2} onChange={e=>setParol2(e.target.value)}
-                placeholder="Parolni qayta kiriting"
-                className="w-full text-sm px-3.5 py-2.5 pr-10 rounded-xl outline-none"
-                style={{ background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.1)", color:"rgba(210,225,255,0.9)" }}
-                onFocus={e=>{e.target.style.borderColor="rgba(59,130,246,0.5)";e.target.style.boxShadow="0 0 0 3px rgba(59,130,246,0.08)";}}
-                onBlur={e=>{e.target.style.borderColor="rgba(255,255,255,0.1)";e.target.style.boxShadow="none";}}
-              />
-              <button type="button" onClick={()=>setShowP2(!showP2)}
-                className="absolute right-3 top-1/2 -translate-y-1/2"
-                style={{ color:"rgba(120,150,200,0.5)" }}>
-                {showP2
-                  ? <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
-                  : <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                }
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {pwdError && (
-          <p className="text-xs px-3 py-2 rounded-lg" style={{ background:"rgba(248,113,113,0.1)", color:"#f87171", border:"1px solid rgba(248,113,113,0.2)" }}>
-            ⚠️ {pwdError}
-          </p>
-        )}
-
-        <button onClick={handleSavePwd}
-          className="px-5 py-2.5 rounded-xl text-sm font-bold transition-all"
-          style={{
-            background: pwdSaved ? "rgba(16,185,129,0.2)" : "rgba(139,92,246,0.15)",
-            border: `1px solid ${pwdSaved ? "rgba(16,185,129,0.4)" : "rgba(139,92,246,0.35)"}`,
-            color: pwdSaved ? "#34d399" : "#a78bfa",
-          }}
-          onMouseEnter={e=>{ if(!pwdSaved) e.currentTarget.style.background="rgba(139,92,246,0.25)"; }}
-          onMouseLeave={e=>{ if(!pwdSaved) e.currentTarget.style.background="rgba(139,92,246,0.15)"; }}>
-          {pwdSaved ? "✓ Parol yangilandi!" : "🔒 Parolni o'zgartirish"}
-        </button>
+function InfoRow({ icon, label, value, color, muted = false }: {
+  icon: string; label: string; value: string; color: string; muted?: boolean;
+}) {
+  return (
+    <div className="flex items-center gap-4 px-4 py-3.5 rounded-2xl"
+      style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
+      <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+        style={{ background: `${color}18`, border: `1px solid ${color}28`, color }}>
+        {ICONS[icon]}
       </div>
-
-      {/* Hisob ma'lumotlari */}
-      <div className="p-5 rounded-2xl"
-        style={{ background:"rgba(255,255,255,0.02)", border:"1px solid rgba(255,255,255,0.06)" }}>
-        <p className="text-sm font-bold mb-4" style={{ color:"rgba(150,180,230,0.75)" }}>ℹ️ Hisob ma'lumotlari</p>
-        <div className="grid grid-cols-2 gap-3">
-          {[
-            { label:"Rol",          val: ROLE_LABELS[user?.role || "user"],                        icon:"🛡️" },
-            { label:"Holat",        val: "Faol",                                                    icon:"✅" },
-            { label:"Qo'shilgan",   val: user?.createdAt ? new Date(user.createdAt).toLocaleDateString("uz-UZ") : "—", icon:"📅" },
-            { label:"Tizim ID",     val: user?.id?.slice?.(0,8) || "—",                            icon:"🔖" },
-          ].map(r => (
-            <div key={r.label} className="p-3 rounded-xl"
-              style={{ background:"rgba(255,255,255,0.02)", border:"1px solid rgba(255,255,255,0.05)" }}>
-              <p className="text-[10px] mb-1 flex items-center gap-1" style={{ color:"rgba(100,130,200,0.45)" }}>
-                {r.icon} {r.label}
-              </p>
-              <p className="text-sm font-semibold" style={{ color:"rgba(200,220,255,0.8)" }}>{r.val}</p>
-            </div>
-          ))}
-        </div>
+      <div className="flex-1 min-w-0">
+        <p className="text-[10px] font-bold tracking-widest" style={{ color: "rgba(100,130,200,0.4)" }}>
+          {label.toUpperCase()}
+        </p>
+        <p className="text-sm font-semibold mt-0.5 truncate"
+          style={{ color: muted ? "rgba(100,130,200,0.3)" : "rgba(210,230,255,0.9)" }}>
+          {value}
+        </p>
       </div>
     </div>
   );

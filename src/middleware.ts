@@ -22,11 +22,6 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Bosh sahifaga kelsa login ga redirect
-  if (pathname === "/") {
-    return NextResponse.redirect(new URL("/login", request.url));
-  }
-
   return NextResponse.next();
 }
 

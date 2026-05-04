@@ -1,4 +1,20 @@
-@import 'leaflet/dist/leaflet.css';
+/* Leaflet popup custom style */
+.invest-popup .leaflet-popup-content-wrapper {
+  border-radius: 14px !important;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.18) !important;
+  padding: 0 !important;
+  border: 1px solid #e2e8f0 !important;
+}
+.invest-popup .leaflet-popup-content {
+  margin: 12px 14px !important;
+}
+.invest-popup .leaflet-popup-tip-container {
+  margin-top: -1px;
+}
+.invest-popup .leaflet-popup-tip {
+  box-shadow: none !important;
+  border: 1px solid #e2e8f0;
+}
 
 @tailwind base;
 @tailwind components;
@@ -97,41 +113,94 @@
   animation: shimmer 1.5s infinite;
 }
 
-/* ─── Light mode ────────────────────────────────────────── */
-/*
-  Sidebar va Header — JS conditional colors bilan (Sidebar.tsx, Header.tsx)
-  Main content — quyidagi CSS bilan override
-*/
+/* ═══════════════════════════════════════════════════════════════
+   LIGHT MODE  — .light-mode class layoutda mavjud bo'lganda
+   ═══════════════════════════════════════════════════════════════ */
 
-/* Main content area text — faqat sidebar tashqarisidagi content */
+.light-mode main {
+  background: #f0f4ff !important;
+}
+
+/* Barcha matn va border — asosiy override */
 .light-mode main * {
   color: #1e293b !important;
   border-color: #cbd5e1 !important;
 }
 
-/* Colored accents saqlansin — status, badge ranglari */
-.light-mode main [style*="color:#10b981"],
-.light-mode main [style*="color:#34d399"],
-.light-mode main [style*="color:#60a5fa"],
-.light-mode main [style*="color:#f59e0b"],
-.light-mode main [style*="color:#f87171"],
-.light-mode main [style*="color:#fb923c"],
-.light-mode main [style*="color:#a78bfa"],
-.light-mode main [style*="color:#06b6d4"],
-.light-mode main [style*="color:#f97316"],
-.light-mode main [style*="color:#8b5cf6"],
-.light-mode main [style*="color:#3b82f6"],
-.light-mode main [style*="color:#64748b"],
-.light-mode main [style*="color:#94a3b8"] {
-  color: inherit !important;
-}
-
-/* Card/panel backgrounds — light */
-.light-mode main {
+/* ── Dark page backgrounds → oq/açık rangga ── */
+.light-mode main [style*="background: #081526"],
+.light-mode main [style*="background:#081526"],
+.light-mode main [style*="background: #0a0f1e"],
+.light-mode main [style*="background:#0a0f1e"],
+.light-mode main [style*="background: #0d1f3c"],
+.light-mode main [style*="background:#0d1f3c"],
+.light-mode main [style*="background: #0a1628"],
+.light-mode main [style*="background:#0a1628"],
+.light-mode main [style*="background: #07142a"],
+.light-mode main [style*="background:#07142a"] {
   background: #f0f4ff !important;
 }
 
-/* Inputs */
+/* Dark glass cards / panels → oq */
+.light-mode main [style*="rgba(6,12,28"],
+.light-mode main [style*="rgba(6, 12, 28"],
+.light-mode main [style*="rgba(8,21,38"],
+.light-mode main [style*="rgba(13,20,40"],
+.light-mode main [style*="rgba(13, 20, 40"],
+.light-mode main [style*="rgba(0,0,0,0.4"],
+.light-mode main [style*="rgba(0,0,0,0.5"],
+.light-mode main [style*="rgba(0,0,0,0.6"],
+.light-mode main [style*="rgba(0,0,0,0.7"],
+.light-mode main [style*="rgba(0,0,0,0.8"] {
+  background: #ffffff !important;
+}
+
+/* Dark gradient backgrounds → oq */
+.light-mode main [style*="linear-gradient(135deg, #0"] {
+  background: #f0f4ff !important;
+}
+.light-mode main [style*="linear-gradient(135deg,#0"] {
+  background: #f0f4ff !important;
+}
+
+/* Dark rgba(255,255,255,0.0x) backgrounds → qo'ng'ir/açık */
+.light-mode main [style*="rgba(255,255,255,0.03"],
+.light-mode main [style*="rgba(255,255,255,0.04"],
+.light-mode main [style*="rgba(255,255,255,0.06"],
+.light-mode main [style*="rgba(255,255,255,0.08"],
+.light-mode main [style*="rgba(255,255,255,0.09"] {
+  background: #f8faff !important;
+}
+
+/* ── Status/badge ranglari saqlansin ── */
+.light-mode main [style*="color: #10b981"],.light-mode main [style*="color:#10b981"],
+.light-mode main [style*="color: #34d399"],.light-mode main [style*="color:#34d399"],
+.light-mode main [style*="color: #60a5fa"],.light-mode main [style*="color:#60a5fa"],
+.light-mode main [style*="color: #f59e0b"],.light-mode main [style*="color:#f59e0b"],
+.light-mode main [style*="color: #f87171"],.light-mode main [style*="color:#f87171"],
+.light-mode main [style*="color: #fb923c"],.light-mode main [style*="color:#fb923c"],
+.light-mode main [style*="color: #a78bfa"],.light-mode main [style*="color:#a78bfa"],
+.light-mode main [style*="color: #06b6d4"],.light-mode main [style*="color:#06b6d4"],
+.light-mode main [style*="color: #f97316"],.light-mode main [style*="color:#f97316"],
+.light-mode main [style*="color: #8b5cf6"],.light-mode main [style*="color:#8b5cf6"],
+.light-mode main [style*="color: #3b82f6"],.light-mode main [style*="color:#3b82f6"],
+.light-mode main [style*="color: #38bdf8"],.light-mode main [style*="color:#38bdf8"],
+.light-mode main [style*="color: #fbbf24"],.light-mode main [style*="color:#fbbf24"],
+.light-mode main [style*="color: #c9a84c"],.light-mode main [style*="color:#c9a84c"],
+.light-mode main [style*="color: #16a34a"],.light-mode main [style*="color:#16a34a"],
+.light-mode main [style*="color: #dc2626"],.light-mode main [style*="color:#dc2626"],
+.light-mode main [style*="color: #d97706"],.light-mode main [style*="color:#d97706"],
+.light-mode main [style*="color: #0891b2"],.light-mode main [style*="color:#0891b2"],
+.light-mode main [style*="color: #1d4ed8"],.light-mode main [style*="color:#1d4ed8"],
+.light-mode main [style*="color: #7c3aed"],.light-mode main [style*="color:#7c3aed"],
+.light-mode main [style*="color: #64748b"],.light-mode main [style*="color:#64748b"],
+.light-mode main [style*="color: #94a3b8"],.light-mode main [style*="color:#94a3b8"] {
+  color: inherit !important;
+}
+
+/* Status badge rangli background-lari o'z holicha qoladi (override yo'q) */
+
+/* ── Inputs ── */
 .light-mode main input,
 .light-mode main textarea,
 .light-mode main select {
@@ -144,17 +213,105 @@
   color: #94a3b8 !important;
 }
 
-/* Map container — o'z ranglarini saqlaydi */
+/* ── Modal overlay ── */
+.light-mode [style*="position: fixed"][style*="inset: 0"],
+.light-mode [style*="position:fixed"][style*="inset:0"] {
+  background: rgba(0,0,0,0.35) !important;
+}
+/* ── Dark mode — modal card ── */
+.dark-mode [style*="position: fixed"] [style*="background: #fff"],
+.dark-mode [style*="position: fixed"] [style*="background:#fff"],
+.dark-mode [style*="position: fixed"] [style*="background: #faf7f0"] {
+  background: #0d1528 !important;
+  color: rgba(220,235,255,0.9) !important;
+}
+
+/* ── Map container ── */
 .light-mode .leaflet-container,
 .light-mode .leaflet-container * {
   color: inherit !important;
   border-color: inherit !important;
 }
 
-/* Logout/profile dropdown — Header ichida ishlaydi */
-.light-mode header button {
-  color: #374151 !important;
+/* ── Header buttons ── */
+.light-mode header button { color: #374151 !important; }
+.light-mode header button[style*="#f87171"] { color: #dc2626 !important; }
+
+
+/* ═══════════════════════════════════════════════════════════════
+   DARK MODE  — .light-mode yo'q bo'lganda (default holat)
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Light page backgrounds → qorong'i */
+.dark-mode main [style*="background: #fff;"],
+.dark-mode main [style*="background:#fff;"],
+.dark-mode main [style*="background: #ffffff"],
+.dark-mode main [style*="background:#ffffff"],
+.dark-mode main [style*="background: #faf7f0"],
+.dark-mode main [style*="background:#faf7f0"],
+.dark-mode main [style*="background: #f0ead8"],
+.dark-mode main [style*="background:#f0ead8"],
+.dark-mode main [style*="background: #f0f4ff"],
+.dark-mode main [style*="background:#f0f4ff"],
+.dark-mode main [style*="background: #f8fafc"],
+.dark-mode main [style*="background:#f8fafc"] {
+  background: #0d1528 !important;
 }
-.light-mode header button[style*="#f87171"] {
-  color: #dc2626 !important;
+
+/* Light inline text colors → oq */
+.dark-mode main [style*="color: #0d1f3c"],
+.dark-mode main [style*="color:#0d1f3c"] {
+  color: rgba(220,235,255,0.92) !important;
+}
+.dark-mode main [style*="color: #8896b0"],
+.dark-mode main [style*="color:#8896b0"],
+.dark-mode main [style*="color: #b0bdd4"],
+.dark-mode main [style*="color:#b0bdd4"] {
+  color: rgba(150,175,215,0.75) !important;
+}
+
+/* Light border colors → qorong'i */
+.dark-mode main [style*="border-color: #e4dbc8"],
+.dark-mode main [style*="border-color:#e4dbc8"],
+.dark-mode main [style*="1px solid #e4dbc8"],
+.dark-mode main [style*="1.5px solid #e4dbc8"],
+.dark-mode main [style*="1px solid #e2e8f0"],
+.dark-mode main [style*="1.5px solid #e2e8f0"] {
+  border-color: rgba(255,255,255,0.1) !important;
+}
+
+/* Light inputs → qorong'i */
+.dark-mode main input,
+.dark-mode main textarea,
+.dark-mode main select {
+  background: rgba(255,255,255,0.06) !important;
+  border-color: rgba(255,255,255,0.12) !important;
+  color: rgba(220,235,255,0.9) !important;
+}
+.dark-mode main input::placeholder,
+.dark-mode main textarea::placeholder {
+  color: rgba(255,255,255,0.3) !important;
+}
+
+/* Status badge backgrounds — dark mode'da rangli ko'rinsin */
+.dark-mode main [style*="background: #ecfeff"] { background: rgba(8,145,178,0.18) !important; }
+.dark-mode main [style*="background: #eff6ff"] { background: rgba(29,78,216,0.18) !important; }
+.dark-mode main [style*="background: #f0fdf4"] { background: rgba(22,163,74,0.18) !important; }
+.dark-mode main [style*="background: #fef2f2"] { background: rgba(220,38,38,0.18) !important; }
+.dark-mode main [style*="background: #fffbeb"] { background: rgba(217,119,6,0.18) !important; }
+.dark-mode main [style*="background: #faf5ff"] { background: rgba(124,58,237,0.18) !important; }
+.dark-mode main [style*="background: #ecfdf5"] { background: rgba(5,150,105,0.18) !important; }
+.dark-mode main [style*="background: #f5f3ff"] { background: rgba(124,58,237,0.18) !important; }
+
+/* Dark mode — box-shadow ko'rinishi yaxshilash */
+.dark-mode main [style*="box-shadow: 0 1px 3px rgba(0,0,0,0.08)"],
+.dark-mode main [style*="box-shadow:0 1px 3px rgba(0,0,0,0.08)"] {
+  box-shadow: 0 2px 12px rgba(0,0,0,0.4) !important;
+}
+
+/* Map container — o'z ranglarini saqlaydi */
+.dark-mode .leaflet-container,
+.dark-mode .leaflet-container * {
+  color: inherit !important;
+  border-color: inherit !important;
 }
